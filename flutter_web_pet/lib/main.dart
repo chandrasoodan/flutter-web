@@ -1,7 +1,16 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in_web/google_sign_in_web.dart';
+import 'package:googleapis/servicecontrol/v1.dart';
+import 'package:googleapis/sheets/v4.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
+/// Provides the `GoogleSignIn` class
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:http/io_client.dart';
+import "package:googleapis_auth/auth_io.dart" as auth;
 
+import 'package:extension_google_sign_in_as_googleapis_auth/extension_google_sign_in_as_googleapis_auth.dart';
 import 'home_screen.dart';
 
 void main() async {
@@ -24,9 +33,31 @@ class MyApp extends StatelessWidget {
     Locale('en'),
     Locale('ar'),
   ];
+  Future<SheetsApi> getSheetsClient(GoogleSignIn signIn) async {
+    final _key =
+
+    print('getting oauth');
+    var cred = await auth.obtainAccessCredentialsViaServiceAccount(
+        auth.ServiceAccountCredentials.fromJson(_key), signIn.scopes, http.Client());
+
+    auth.AuthClient client = auth.authenticatedClient(http.Client(), cred);
+    SheetsApi api = new SheetsApi(client);
+    return api;
+  }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context)  {
+    final _googleSignIn = GoogleSignIn(
+      scopes: <String>[SheetsApi.spreadsheetsReadonlyScope],
+      clientId: "803948195257-l7o2sjc90j2ddttf7tvas7rrqtintqda.apps.googleusercontent.com",
+
+    );
+    getSheetsClient(_googleSignIn).then((value) =>
+    value.spreadsheets.values.get("18Fics3wkaF5Sy4-UqR2rAYkr52JIPlwHUlXS79IDl9w","Sheet1!A1:A9").then((value) =>
+    print(value.majorDimension)
+    )
+    );
+
     return MaterialApp(
       title: 'Flutter Zoom Drawer Demo',
       onGenerateTitle: (context) => tr("app_name"),

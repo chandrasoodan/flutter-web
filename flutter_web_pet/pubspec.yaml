@@ -31,6 +31,9 @@ dependencies:
   shrink_sidemenu: any
   liquid_ui: any
   smooth_scroll_web: ^0.0.4
+  googleapis: ^3.0.0
+  google_sign_in_web: ^0.10.0
+  extension_google_sign_in_as_googleapis_auth: ^2.0.2
 
 dev_dependencies:
   flutter_test:
